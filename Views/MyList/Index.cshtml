@@ -1,0 +1,209 @@
+﻿@model IEnumerable<NetflixClone.Models.MyList>
+
+@{
+    ViewData["Title"] = "My List";
+}
+
+<style>
+    body {
+        background: #141414;
+        color: white;
+    }
+
+    .mylist-page {
+        min-height: 90vh;
+        padding: 40px;
+    }
+
+    .page-title {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .movie-card {
+        background: #222;
+        border-radius: 5px;
+        overflow: hidden;
+        height: 100%;
+        transition: 0.2s;
+    }
+
+        .movie-card:hover {
+            transform: scale(1.03);
+        }
+
+    .movie-poster {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+    }
+
+    .no-poster {
+        height: 300px;
+        background: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 50px;
+    }
+
+    .movie-info {
+        padding: 15px;
+    }
+
+    .movie-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .movie-meta {
+        color: #aaa;
+        font-size: 14px;
+        margin-bottom: 12px;
+    }
+
+    .details-btn {
+        background: #555;
+        color: white;
+        text-decoration: none;
+        padding: 7px 12px;
+        border-radius: 4px;
+    }
+
+        .details-btn:hover {
+            background: #777;
+            color: white;
+        }
+
+    .remove-btn {
+        background: #e50914;
+        color: white;
+        border: none;
+        padding: 7px 12px;
+        border-radius: 4px;
+    }
+
+        .remove-btn:hover {
+            background: #f40612;
+        }
+
+    .empty-list {
+        color: #aaa;
+        font-size: 18px;
+        margin-top: 50px;
+    }
+</style>
+
+
+<div class="container-fluid mylist-page">
+
+    <h1 class="page-title">
+        ❤️ My List
+    </h1>
+
+
+    @if (!Model.Any())
+    {
+        <div class="empty-list">
+
+            <p>
+                Your list is empty.
+            </p>
+
+            <a asp-controller="Movies"
+                   asp-action="Index"
+                   class="details-btn">
+                Browse Movies
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+
+            @foreach (var item in Model)
+            {
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+
+                    <div class="movie-card">
+
+                        @if (!string.IsNullOrEmpty(item.Movie?.PosterUrl))
+                        {
+                            <img src="@item.Movie.PosterUrl"
+                                 alt="@item.Movie.Title"
+                                 class="movie-poster" />
+                        }
+                        else
+                        {
+                            <div class="no-poster">
+                                🎬
+                            </div>
+                        }
+
+
+                        <div class="movie-info">
+
+                            <div class="movie-title">
+                                @item.Movie?.Title
+                            </div>
+
+                            <div class="movie-meta">
+
+                                @item.Movie?.ReleaseYear
+
+                                @if (item.Movie?.Category != null)
+                                {
+                                    <span>
+                                        • @item.Movie.Category.Name
+                                    </span>
+                                }
+
+                                <br />
+
+                                @item.Movie?.Duration min
+
+                            </div>
+
+
+                            <div>
+
+                                <a asp-controller="Movies"
+                                       asp-action="Details"
+                                       asp-route-id="@item.MovieId"
+                                       class="details-btn">
+                                    Details
+                                </a>
+
+
+                                <form asp-controller="MyList"
+                                      asp-action="Remove"
+                                      asp-route-id="@item.Id"
+                                      method="post"
+                                      style="display:inline;">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit"
+                                            class="remove-btn"
+                                            onclick="return confirm('Remove this movie from My List?');">
+                                        Remove
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>

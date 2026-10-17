@@ -1,0 +1,222 @@
+﻿@model IEnumerable<NetflixClone.Models.Movie>
+
+@{
+    ViewData["Title"] = "Search Movies";
+}
+
+<style>
+    body {
+        background: #141414;
+        color: white;
+    }
+
+    .search-page {
+        min-height: 90vh;
+        padding: 40px;
+    }
+
+    .search-title {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 25px;
+    }
+
+    .search-box {
+        max-width: 600px;
+        margin-bottom: 40px;
+    }
+
+    .search-input {
+        background: #333;
+        border: 1px solid #555;
+        color: white;
+        padding: 12px;
+    }
+
+        .search-input:focus {
+            background: #333;
+            color: white;
+            border-color: #888;
+            box-shadow: none;
+        }
+
+    .search-btn {
+        background: #e50914;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+    }
+
+        .search-btn:hover {
+            background: #f40612;
+        }
+
+    .movie-card {
+        background: #222;
+        border-radius: 5px;
+        overflow: hidden;
+        height: 100%;
+        transition: 0.2s;
+    }
+
+        .movie-card:hover {
+            transform: scale(1.03);
+        }
+
+    .movie-poster {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+    }
+
+    .no-poster {
+        height: 280px;
+        background: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 50px;
+    }
+
+    .movie-info {
+        padding: 15px;
+    }
+
+    .movie-title {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .movie-meta {
+        color: #aaa;
+        font-size: 14px;
+        margin: 8px 0;
+    }
+
+    .details-btn {
+        display: inline-block;
+        background: #e50914;
+        color: white;
+        text-decoration: none;
+        padding: 7px 14px;
+        border-radius: 4px;
+    }
+
+        .details-btn:hover {
+            background: #f40612;
+            color: white;
+        }
+
+    .no-results {
+        color: #aaa;
+        font-size: 18px;
+        margin-top: 30px;
+    }
+</style>
+
+
+<div class="container-fluid search-page">
+
+    <h1 class="search-title">
+        🔍 Search Movies
+    </h1>
+
+
+    <!-- Search Form -->
+
+    <form asp-controller="Movies"
+          asp-action="Search"
+          method="get"
+          class="search-box">
+
+        <div class="input-group">
+
+            <input type="text"
+                   name="searchTerm"
+                   class="form-control search-input"
+                   placeholder="Search movie..."
+                   value="@Context.Request.Query["searchTerm"]" />
+
+            <button type="submit"
+                    class="search-btn">
+                Search
+            </button>
+
+        </div>
+
+    </form>
+
+
+    <!-- Results -->
+    @if (!Model.Any())
+    {
+        <div class="no-results">
+            No movies found.
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+
+            @foreach (var movie in Model)
+            {
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+
+                    <div class="movie-card">
+
+                        @if (!string.IsNullOrEmpty(movie.PosterUrl))
+                        {
+                            <img src="@movie.PosterUrl"
+                                 alt="@movie.Title"
+                                 class="movie-poster" />
+                        }
+                        else
+                        {
+                            <div class="no-poster">
+                                🎬
+                            </div>
+                        }
+
+
+                        <div class="movie-info">
+
+                            <div class="movie-title">
+                                @movie.Title
+                            </div>
+
+                            <div class="movie-meta">
+
+                                @movie.ReleaseYear
+
+                                @if (movie.Category != null)
+                                {
+                                    <span>
+                                        • @movie.Category.Name
+                                    </span>
+                                }
+
+                                <br />
+
+                                @movie.Duration min
+
+                            </div>
+
+
+                            <a asp-controller="Movies"
+                                   asp-action="Details"
+                                   asp-route-id="@movie.Id"
+                                   class="details-btn">
+                                Details
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>

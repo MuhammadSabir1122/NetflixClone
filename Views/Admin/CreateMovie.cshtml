@@ -1,0 +1,261 @@
+﻿@model NetflixClone.Models.Movie
+
+@{
+    ViewData["Title"] = "Add Movie";
+}
+
+<style>
+    body {
+        background: #141414;
+        color: white;
+    }
+
+    .admin-form-page {
+        min-height: 85vh;
+        padding: 40px 20px;
+    }
+
+    .form-box {
+        max-width: 700px;
+        margin: auto;
+        background: #222;
+        padding: 35px;
+        border-radius: 6px;
+    }
+
+    .form-title {
+        font-size: 30px;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .form-label {
+        color: #ddd;
+        font-weight: 500;
+    }
+
+    .form-control,
+    .form-select {
+        background: #333;
+        border: 1px solid #444;
+        color: white;
+        padding: 12px;
+    }
+
+        .form-control:focus,
+        .form-select:focus {
+            background: #333;
+            color: white;
+            border-color: #777;
+            box-shadow: none;
+        }
+
+        .form-control::placeholder {
+            color: #999;
+        }
+
+        .form-select option {
+            background: #333;
+            color: white;
+        }
+
+    .save-btn {
+        background: #e50914;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+        .save-btn:hover {
+            background: #f40612;
+        }
+
+    .back-btn {
+        color: #aaa;
+        text-decoration: none;
+        margin-left: 15px;
+    }
+
+        .back-btn:hover {
+            color: white;
+        }
+
+    .validation {
+        color: #ff6b6b;
+        font-size: 14px;
+    }
+</style>
+
+<div class="container admin-form-page">
+
+    <div class="form-box">
+
+        <h1 class="form-title">
+            Add New Movie
+        </h1>
+
+        <form asp-action="CreateMovie" method="post">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="validation mb-3">
+            </div>
+
+
+            <!-- Title -->
+
+            <div class="mb-3">
+
+                <label asp-for="Title"
+                       class="form-label">
+                    Movie Title
+                </label>
+
+                <input asp-for="Title"
+                       class="form-control"
+                       placeholder="Enter movie title" />
+
+                <span asp-validation-for="Title"
+                      class="validation">
+                </span>
+
+            </div>
+
+
+            <!-- Description -->
+
+            <div class="mb-3">
+
+                <label asp-for="Description"
+                       class="form-label">
+                    Description
+                </label>
+
+                <textarea asp-for="Description"
+                          class="form-control"
+                          rows="4"
+                          placeholder="Enter movie description"></textarea>
+
+            </div>
+
+
+            <!-- Release Year -->
+
+            <div class="mb-3">
+
+                <label asp-for="ReleaseYear"
+                       class="form-label">
+                    Release Year
+                </label>
+
+                <input asp-for="ReleaseYear"
+                       type="number"
+                       class="form-control"
+                       placeholder="2026" />
+
+            </div>
+
+
+            <!-- Duration -->
+
+            <div class="mb-3">
+
+                <label asp-for="Duration"
+                       class="form-label">
+                    Duration (minutes)
+                </label>
+
+                <input asp-for="Duration"
+                       type="number"
+                       class="form-control"
+                       placeholder="120" />
+
+            </div>
+
+
+            <!-- Poster URL -->
+
+            <div class="mb-3">
+
+                <label asp-for="PosterUrl"
+                       class="form-label">
+                    Poster URL
+                </label>
+
+                <input asp-for="PosterUrl"
+                       class="form-control"
+                       placeholder="https://example.com/poster.jpg" />
+
+            </div>
+
+
+            <!-- Video URL -->
+
+            <div class="mb-3">
+
+                <label asp-for="VideoUrl"
+                       class="form-label">
+                    Video URL
+                </label>
+
+                <input asp-for="VideoUrl"
+                       class="form-control"
+                       placeholder="https://example.com/movie.mp4" />
+
+            </div>
+
+
+            <!-- Category -->
+
+            <div class="mb-4">
+
+                <label class="form-label">
+                    Category
+                </label>
+
+                <select asp-for="CategoryId"
+                        class="form-select">
+
+                    <option value="">
+                        -- Select Category --
+                    </option>
+
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        <option value="@category.Id">
+                            @category.Name
+                        </option>
+                    }
+
+                </select>
+
+            </div>
+
+
+            <!-- Buttons -->
+
+            <button type="submit"
+                    class="save-btn">
+                Add Movie
+            </button>
+
+            <a asp-controller="Admin"
+                   asp-action="Movies"
+                   class="back-btn">
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

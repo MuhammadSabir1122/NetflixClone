@@ -1,0 +1,161 @@
+﻿@model IEnumerable<NetflixClone.Models.Movie>
+
+@{
+    ViewData["Title"] = "Movies";
+}
+
+<style>
+    body {
+        background: #141414;
+        color: white;
+    }
+
+    .movies-page {
+        padding: 40px;
+        min-height: 90vh;
+    }
+
+    .page-title {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .movie-card {
+        background: #222;
+        border-radius: 5px;
+        overflow: hidden;
+        height: 100%;
+        transition: 0.2s;
+    }
+
+        .movie-card:hover {
+            transform: scale(1.03);
+        }
+
+    .movie-poster {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+    }
+
+    .no-poster {
+        height: 300px;
+        background: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 50px;
+    }
+
+    .movie-info {
+        padding: 15px;
+    }
+
+    .movie-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .movie-meta {
+        color: #aaa;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .details-btn {
+        display: inline-block;
+        background: #e50914;
+        color: white;
+        text-decoration: none;
+        padding: 8px 15px;
+        border-radius: 4px;
+    }
+
+        .details-btn:hover {
+            background: #f40612;
+            color: white;
+        }
+</style>
+
+
+<div class="container-fluid movies-page">
+
+    <h1 class="page-title">
+        🎬 Movies
+    </h1>
+
+
+    @if (!Model.Any())
+    {
+        <div class="text-secondary">
+            No movies available.
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+
+            @foreach (var movie in Model)
+            {
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+
+                    <div class="movie-card">
+
+                        @if (!string.IsNullOrEmpty(movie.PosterUrl))
+                        {
+                            <img src="@movie.PosterUrl"
+                                 alt="@movie.Title"
+                                 class="movie-poster" />
+                        }
+                        else
+                        {
+                            <div class="no-poster">
+                                🎬
+                            </div>
+                        }
+
+
+                        <div class="movie-info">
+
+                            <div class="movie-title">
+                                @movie.Title
+                            </div>
+
+                            <div class="movie-meta">
+
+                                @movie.ReleaseYear
+
+                                @if (movie.Category != null)
+                                {
+                                    <span>
+                                        • @movie.Category.Name
+                                    </span>
+                                }
+
+                                <br />
+
+                                @movie.Duration min
+
+                            </div>
+
+
+                            <a asp-controller="Movies"
+                                   asp-action="Details"
+                                   asp-route-id="@movie.Id"
+                                   class="details-btn">
+                                View Details
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>

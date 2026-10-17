@@ -1,0 +1,152 @@
+﻿@model NetflixClone.Models.Category
+
+@{
+    ViewData["Title"] = "Add Category";
+}
+
+<style>
+    body {
+        background: #141414;
+        color: white;
+    }
+
+    .admin-form-page {
+        min-height: 85vh;
+        padding: 40px 20px;
+    }
+
+    .form-box {
+        max-width: 600px;
+        margin: auto;
+        background: #222;
+        padding: 35px;
+        border-radius: 6px;
+    }
+
+    .form-title {
+        font-size: 30px;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .form-label {
+        color: #ddd;
+        font-weight: 500;
+    }
+
+    .form-control {
+        background: #333;
+        border: 1px solid #444;
+        color: white;
+        padding: 12px;
+    }
+
+        .form-control:focus {
+            background: #333;
+            color: white;
+            border-color: #777;
+            box-shadow: none;
+        }
+
+        .form-control::placeholder {
+            color: #999;
+        }
+
+    .save-btn {
+        background: #e50914;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+        .save-btn:hover {
+            background: #f40612;
+        }
+
+    .back-btn {
+        color: #aaa;
+        text-decoration: none;
+        margin-left: 15px;
+    }
+
+        .back-btn:hover {
+            color: white;
+        }
+
+    .validation {
+        color: #ff6b6b;
+        font-size: 14px;
+    }
+</style>
+
+<div class="container admin-form-page">
+
+    <div class="form-box">
+
+        <h1 class="form-title">
+            Add Category
+        </h1>
+
+        <form asp-action="CreateCategory" method="post">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="validation mb-3">
+            </div>
+
+            <div class="mb-3">
+
+                <label asp-for="Name"
+                       class="form-label">
+                    Category Name
+                </label>
+
+                <input asp-for="Name"
+                       class="form-control"
+                       placeholder="e.g. Action" />
+
+                <span asp-validation-for="Name"
+                      class="validation">
+                </span>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label asp-for="Description"
+                       class="form-label">
+                    Description
+                </label>
+
+                <textarea asp-for="Description"
+                          class="form-control"
+                          rows="4"
+                          placeholder="Enter category description"></textarea>
+
+            </div>
+
+            <button type="submit"
+                    class="save-btn">
+                Add Category
+            </button>
+
+            <a asp-controller="Admin"
+                   asp-action="Categories"
+                   class="back-btn">
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
